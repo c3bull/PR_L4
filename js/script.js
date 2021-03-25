@@ -177,11 +177,11 @@ let previous = document.querySelector('.previous');
 let question = document.querySelector('.question');
 let answers = document.querySelectorAll('.list-group-item');
 
+let pytanie = document.querySelector('.pytanie');
 let pointsElem = document.querySelector('.score');
 let restart = document.querySelector('.restart');
 let index = 0;
 let points = 0;
-let licznikPytan=2;
 
 function activateAnswers() {
    for (let i = 0; i < answers.length; i++) {
@@ -230,6 +230,7 @@ function setQuestion(index) {
    answers[1].innerHTML = preQuestions[index].answers[1];
    answers[2].innerHTML = preQuestions[index].answers[2];
    answers[3].innerHTML = preQuestions[index].answers[3];
+   pytanie.innerHTML=index+1;
 }
 
 setQuestion(index);
@@ -251,10 +252,6 @@ function doAction(event) {
 next.addEventListener('click', function () {
 	index++;
 	
-	let pytanie = document.querySelector('.pytanie');
-    pytanie.innerHTML = licznikPytan;
-	licznikPytan++;
-	
 	if(index > preQuestions.length-1){
 		index = preQuestion.length-1;
 	}
@@ -265,7 +262,7 @@ next.addEventListener('click', function () {
 
 previous.addEventListener('click', function () {
     index--;
-   
+	
 	if(index < 0){
 	index = 0;
 	return;	  
