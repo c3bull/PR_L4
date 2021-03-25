@@ -1,24 +1,3 @@
-let button = document.querySelector('.scroll');
-
-button.addEventListener('click', goToTop);
-
-function goToTop() {
-	document.body.scrollTop = 0;
-	document.documentElement.scrollTop = 0;
-}
-
-function showTopButton() {
-	if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-    	document.querySelector(".scroll").style.display = "block";
-	} else {
-    	document.querySelector(".scroll").style.display = "none";
-	}
-}
-
-window.onscroll = function() {showTopButton()};
-
-
-
 let preQuestions =
     [
         {
@@ -193,6 +172,7 @@ let preQuestions =
         }];
 
 let next = document.querySelector('.next');
+let previous = document.querySelector('.previous');
 
 let question = document.querySelector('.question');
 let answers = document.querySelectorAll('.list-group-item');
@@ -201,10 +181,58 @@ let pointsElem = document.querySelector('.score');
 let restart = document.querySelector('.restart');
 let index = 0;
 let points = 0;
+let licznikPytan=2;
+
+function activateAnswers() {
+   for (let i = 0; i < answers.length; i++) {
+      answers[i].addEventListener('click', doAction);
+   }
+}
+
+function disableAnswers() {
+   for (let i = 0; i < answers.length; i++) {
+      answers[i].removeEventListener('click', doAction);
+   }
+}
 
 for (let i = 0; i < answers.length; i++) {
     answers[i].addEventListener('click', doAction);
 }
+
+function clearClass(){
+	for(let i = 0; i < answers.length; i++){
+		let elem = answers[i];
+		
+		if(elem.classList.contains('correct')){
+			elem.classList.remove('correct');
+		}
+		
+		if(elem.classList.contains('incorrect')){
+			elem.classList.remove('incorrect');
+		}
+	}
+}
+
+function setQuestion(index) {
+   clearClass();
+   activateAnswers();
+   question.innerHTML = preQuestions[index].question;
+
+   if (preQuestions[index].answers.length === 2) {
+       answers[2].style.display = 'none';
+       answers[3].style.display = 'none';
+   } else {
+       answers[2].style.display = 'block';
+       answers[3].style.display = 'block';
+   }
+
+   answers[0].innerHTML = preQuestions[index].answers[0];
+   answers[1].innerHTML = preQuestions[index].answers[1];
+   answers[2].innerHTML = preQuestions[index].answers[2];
+   answers[3].innerHTML = preQuestions[index].answers[3];
+}
+
+setQuestion(index);
 
 function doAction(event) {
     //event.target - Zwraca referencję do elementu, do którego zdarzenie zostało pierwotnie wysłane.
@@ -220,6 +248,33 @@ function doAction(event) {
 }
 
 
+next.addEventListener('click', function () {
+	index++;
+	
+	let pytanie = document.querySelector('.pytanie');
+    pytanie.innerHTML = licznikPytan;
+	licznikPytan++;
+	
+	if(index > preQuestions.length-1){
+		index = preQuestion.length-1;
+	}
+   
+   setQuestion(index);
+   //activateAnswers();
+});
+
+previous.addEventListener('click', function () {
+    index--;
+   
+	if(index < 0){
+	index = 0;
+	return;	  
+	}
+	
+   setQuestion(index);
+   
+   //activateAnswers();
+});
 
 restart.addEventListener('click', function (event) {
     event.preventDefault();
@@ -233,3 +288,12 @@ restart.addEventListener('click', function (event) {
     list.style.display = 'block';
     results.style.display = 'none';
 });
+
+function markCorrect(elem) {
+   elem.classList.add('correct');
+}
+
+function markInCorrect(elem) {
+   elem.classList.add('incorrect');
+}
+
